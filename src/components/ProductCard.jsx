@@ -18,8 +18,6 @@ const ProductCard = ({ product, addToCart }) => {
   };
 
   const handleBuyNow = () => {
-    // Navigate straight to checkout bypassing cart, carrying only this single item
-    // This perfectly mirrors Amazon's strict single-item Buy Now button
     navigate('/checkout', { 
       state: { 
         buyNowItem: { ...product, quantity } 
@@ -28,72 +26,75 @@ const ProductCard = ({ product, addToCart }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm hover:shadow-xl smooth-transition overflow-hidden border border-gray-100 flex flex-col h-full transform hover:-translate-y-1">
-      <div className="relative h-56 overflow-hidden bg-gray-50">
-        {/* Placeholder if image is missing, though we'll assume it exists */}
-        <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center text-gray-400">
-          <span className="text-sm">Image: {product.name}</span>
+    <div className="group bg-white rounded-3xl shadow-soft hover:shadow-2xl smooth-transition overflow-hidden border border-gray-100 flex flex-col h-full transform hover:-translate-y-2">
+      <div className="relative h-64 overflow-hidden bg-gray-100">
+        <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black tracking-widest text-primary shadow-sm border border-white/50">
+          FARM FRESH
         </div>
         <img
           src={product.image}
           alt={product.name}
-          className="absolute inset-0 w-full h-full object-cover relative z-10"
+          className="absolute inset-0 w-full h-full object-cover relative z-10 transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
           onError={(e) => {
             e.target.style.display = 'none';
           }}
         />
+        {/* Soft gradient overlay at bottom of image for contrast */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       </div>
       
-      <div className="p-6 flex flex-col flex-grow">
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="text-xl font-bold text-gray-900">{product.name}</h3>
-          <span className="text-lg font-bold text-secondary">₹{product.price}<span className="text-sm text-gray-500 font-normal">/{product.unit}</span></span>
+      <div className="p-6 md:p-8 flex flex-col flex-grow relative bg-white z-20">
+        <div className="flex justify-between items-start mb-4">
+          <h3 className="text-2xl font-extrabold text-gray-900 tracking-tight leading-tight">{product.name}</h3>
+          <div className="flex flex-col items-end">
+             <span className="text-2xl font-black text-secondary">₹{product.price}</span>
+             <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">per {product.unit}</span>
+          </div>
         </div>
         
-        <p className="text-gray-600 mb-6 flex-grow">{product.description}</p>
+        <p className="text-gray-500 mb-8 flex-grow leading-relaxed font-medium">{product.description}</p>
         
         <div className="flex flex-col space-y-4 mt-auto">
-          <div className="flex items-center justify-between border border-gray-200 rounded-lg p-1 w-full bg-gray-50">
+          {/* Quantity Selector */}
+          <div className="flex items-center justify-between border-[1.5px] border-gray-200 rounded-2xl p-1.5 w-full bg-gray-50 shadow-inner">
             <button 
               onClick={decrease}
-              className="p-2 text-gray-600 hover:text-primary hover:bg-gray-200 rounded-md smooth-transition focus:outline-none"
-              aria-label="Decrease quantity"
+              className="p-3 text-gray-500 hover:text-primary hover:bg-white hover:shadow-sm rounded-xl smooth-transition focus:outline-none"
             >
               <Minus size={20} />
             </button>
-            <span className="font-semibold text-lg w-10 text-center">{quantity}</span>
+            <span className="font-extrabold text-xl w-12 text-center text-gray-800">{quantity}</span>
             <button 
               onClick={increase}
-              className="p-2 text-gray-600 hover:text-primary hover:bg-gray-200 rounded-md smooth-transition focus:outline-none"
-              aria-label="Increase quantity"
+              className="p-3 text-gray-500 hover:text-primary hover:bg-white hover:shadow-sm rounded-xl smooth-transition focus:outline-none"
             >
               <Plus size={20} />
             </button>
           </div>
           
-          <div className="flex space-x-3">
+          <div className="flex flex-col gap-3">
             <button
               onClick={handleAdd}
-              className={`flex-1 py-3 px-2 rounded-lg font-bold flex items-center justify-center smooth-transition ${
+              className={`w-full py-4 px-6 rounded-2xl font-bold text-sm uppercase tracking-wider flex items-center justify-center smooth-transition ${
                 added 
-                  ? 'bg-green-500 text-white' 
-                  : 'bg-primary text-white hover:bg-opacity-90 shadow-md hover:shadow-lg'
+                  ? 'bg-primary text-white shadow-lg' 
+                  : 'bg-[#4F6F52] text-white hover:bg-primary shadow-soft hover:shadow-lg'
               }`}
             >
               {added ? (
-                'Added!'
+                'Added to Cart!'
               ) : (
                 <>
-                  <ShoppingCart size={18} className="mr-1 lg:mr-2" />
-                  Cart
+                  <ShoppingCart size={18} className="mr-2" />
+                  Add to Cart
                 </>
               )}
             </button>
             <button
               onClick={handleBuyNow}
-              className="flex-1 py-3 px-2 bg-accent text-primary hover:bg-yellow-400 rounded-lg font-bold flex items-center justify-center shadow-md hover:shadow-lg smooth-transition"
+              className="w-full py-4 px-6 bg-accent text-white hover:bg-secondary rounded-2xl font-bold text-sm uppercase tracking-wider flex items-center justify-center shadow-soft hover:shadow-glow smooth-transition"
             >
-              <Zap size={18} className="mr-1 lg:mr-2" />
+              <Zap size={18} className="mr-2" />
               Buy Now
             </button>
           </div>
